@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Container, TextField, Card, Button } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { firebase } from '../utils/firebase';
+import { useHistory } from 'react-router-dom';
 const useStyles = makeStyles((theme) => ({
   root: {
     '& > *': {
@@ -17,10 +18,13 @@ const useStyles = makeStyles((theme) => ({
   buttn: {
     width: '57ch',
   },
+  heading: {
+    textAlign: 'center',
+  },
 }));
 const Register = () => {
   const classes = useStyles();
-
+  const history = useHistory();
   const [pError, setPError] = useState('');
   const emailRef = useRef('');
   const passwordRef = useRef('');
@@ -38,6 +42,10 @@ const Register = () => {
             emailRef.current.value,
             passwordRef.current.value
           );
+        emailRef.current.value = '';
+        passwordRef.current.value = '';
+        confirmPasswordRef.current.value = '';
+        history.push('/home');
         console.log('user', user);
       } catch (error) {
         setPError(error.message);
@@ -47,7 +55,7 @@ const Register = () => {
   return (
     <div>
       <Container maxWidth="sm" fixed>
-        <h1>Register Component</h1>
+        <h1 className={classes.heading}>Registration</h1>
         <Card className={classes.cPadding}>
           {pError && (
             <Alert variant="standard" color="error">

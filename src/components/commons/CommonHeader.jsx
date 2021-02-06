@@ -1,8 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Typography, Button } from '@material-ui/core';
-import { Link, useHistory } from 'react-router-dom';
-import { firebase } from '../../utils/firebase';
+import { Link } from 'react-router-dom';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -20,18 +19,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Header = () => {
+const CommonHeader = () => {
   const classes = useStyles();
-  const history = useHistory();
 
-  const logout = async () => {
-    try {
-      await firebase.auth().signOut();
-      history.push('/login');
-    } catch (error) {
-      console.log(error);
-    }
-  };
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -43,27 +33,15 @@ const Header = () => {
           </Typography>
           &nbsp;&nbsp;
           <Typography>
-            <Link to="/home" className={classes.color}>
-              Home
+            <Link to="/login" className={classes.color}>
+              Login
             </Link>
           </Typography>
           &nbsp;&nbsp;
           <Typography>
-            <Link to="/" className={classes.color}>
-              Module 1
+            <Link to="/register" className={classes.color}>
+              Signup
             </Link>
-          </Typography>
-          &nbsp;&nbsp;
-          <Typography>
-            <Link to="/" className={classes.color}>
-              Module 2
-            </Link>
-          </Typography>
-          &nbsp;&nbsp;
-          <Typography>
-            <Button className={classes.color} onClick={logout}>
-              Logout
-            </Button>
           </Typography>
         </Toolbar>
       </AppBar>
@@ -71,4 +49,4 @@ const Header = () => {
   );
 };
 
-export { Header };
+export { CommonHeader };

@@ -1,7 +1,7 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useRef } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-
+import { firebase } from '../utils/firebase';
 import {
   Container,
   TextField,
@@ -11,6 +11,7 @@ import {
   FormControlLabel,
   Grid,
 } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 const useStyles = makeStyles((theme) => ({
   root: {
     '& > *': {
@@ -35,20 +36,47 @@ const useStyles = makeStyles((theme) => ({
 }));
 const Login = () => {
   const classes = useStyles();
+  const history = useHistory();
+
+  const [loginError, setLoginError] = useState('');
+  const emailRef = useRef('');
+  const passwordRef = useRef('');
+
+  const login = async () => {
+    try {
+      setLoginError('');
+      await firebase
+        .auth()
+        .signInWithEmailAndPassword(
+          emailRef.current.value,
+          passwordRef.current.value
+        );
+      history.push('/home');
+    } catch (error) {
+      setLoginError(error.message);
+    }
+  };
   return (
     <div>
       <Container maxWidth="sm" fixed className={classes.base}>
         <h1></h1>
         <Card className={classes.cPadding}>
           <h1 className={classes.textA}>Login</h1>
+          {loginError && (
+            <Alert variant="standard" color="error">
+              {loginError}
+            </Alert>
+          )}
           <form className={classes.root} noValidate autoComplete="off">
             <TextField
+              inputRef={emailRef}
               id="outlined-basic"
               label="Email"
               variant="outlined"
               type="email"
             />
             <TextField
+              inputRef={passwordRef}
               id="outlined-basic"
               label="Password"
               variant="outlined"
@@ -69,6 +97,7 @@ const Login = () => {
               variant="contained"
               color="primary"
               className={classes.buttn}
+              onClick={login}
             >
               Login
             </Button>
@@ -88,7 +117,6 @@ const Login = () => {
                 </Link>
               </Grid>
             </Grid>
-            {/* <Grid></Grid> */}
           </form>
         </Card>
       </Container>
